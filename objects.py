@@ -44,19 +44,28 @@ class Button:
 
 
 class Ball:
-    def __init__(self,x,y,radius,speed,color):
+    def __init__(self,x,y,radius,speed_x,speed_y,color):
         self.x = x
         self.y = y
         self.radius = radius
-        self.speed = speed
+        self.speed_x = speed_x
+        self.speed_y = speed_y
         self.color = color
 
     def update(self):
-        self.x = self.speed
-        self.y = self.speed
+        self.x += self.speed_x
+        self.y += self.speed_y
 
     def draw(self,screen):
+        pg.draw.circle(screen,self.color,(int(self.x),int(self.y)),self.radius)
 
+    def get_rect(self):
+        return pg.Rect(self.x - self.radius,self.y - self.radius,self.radius*2,self.radius*2)
+
+    def change_x(self):
+        self.speed_x *= -1
+    def change_y(self):
+        self.speed_y *= -1
 
 
 
@@ -71,13 +80,17 @@ class Block:
         if self.alive:
             pg.draw.rect(screen,self.color,self.rect)
 
+
+
+
 class Text:
     def __init__(self,x,y,color,font_size,text):
-        self.font_size =
+        self.font_size = font_size
         self.x = x
         self.y = y
         self.color = color
         self.text = text
+        self.font = pg.font.SysFont(None,self.font_size)
 
     def draw(self,screen):
         text_surface = pg.font.render(self.text,True,self.color)
