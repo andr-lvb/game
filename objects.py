@@ -8,12 +8,12 @@ class Platform:
         self.color = color
 
 
-    def update(self,keys):
+    def update(self,keys,delta):
         if keys[pg.K_a] or keys[pg.K_LEFT]:
-            self.rect.x -= self.speed
+            self.rect.x -= self.speed * delta
 
         if keys[pg.K_d] or keys[pg.K_RIGHT]:
-            self.rect.x += self.speed
+            self.rect.x += self.speed * delta
 
         if self.rect.left < 0:
             self.rect.left = 0
@@ -52,9 +52,9 @@ class Ball:
         self.speed_y = speed_y
         self.color = color
 
-    def update(self):
-        self.x += self.speed_x
-        self.y += self.speed_y
+    def update(self,delta):
+        self.x += self.speed_x * delta * 1.02
+        self.y += self.speed_y * delta * 1.02
 
     def draw(self,screen):
         pg.draw.circle(screen,self.color,(int(self.x),int(self.y)),self.radius)
@@ -75,10 +75,29 @@ class Block:
         self.rect = pg.Rect(x,y,width,height)
         self.color = color
         self.alive = True
+        self._bonus = 0
 
     def draw(self,screen):
         if self.alive:
-            pg.draw.rect(screen,self.color,self.rect)
+            if self.bonus != 0:
+                pg.draw.rect(screen,(222,222,222),self.rect)
+            else:
+                pg.draw.rect(screen,self.color,self.rect)
+
+
+    # def bonus(self,bonus):
+    #     self.bonus = bonus
+
+    @property
+    def bonus(self):
+        return self._bonus
+    @bonus.setter
+    def bonus(self,value):
+        self._bonus = value
+
+
+
+
 
 
 
@@ -93,5 +112,5 @@ class Text:
         self.font = pg.font.SysFont(None,self.font_size)
 
     def draw(self,screen):
-        text_surface = pg.font.render(self.text,True,self.color)
-        pg.blit(text_surface,(self.x,self.y))
+        text_surface = self.font.render(self.text,True,self.color)
+        screen.blit(text_surface,(self.x,self.y))
