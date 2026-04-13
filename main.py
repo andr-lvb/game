@@ -13,7 +13,6 @@ clock = pg.time.Clock()
 
 
 running = True
-state = 'play'
 game = Game()
 
 
@@ -23,11 +22,12 @@ while running:
             running = False
         game.handler_event(event)
 
-
-
     delta = clock.tick(cn.FPS) / 1000
-    state = game.update(delta)
+    if game.start_state == 'play':
+        game.update(delta)
+
+
     game.draw(screen)
     pg.display.flip()
     fps = clock.get_fps()
-    pg.display.set_caption(f'Arkanoid | fps {fps:.0f} | time {delta:.3f} ms')
+    pg.display.set_caption(f'Arkanoid | fps {fps:.0f} ')
